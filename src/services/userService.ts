@@ -32,6 +32,7 @@ interface LoginParams {
   email: string;
   password: string;
 }
+
 export const login = async ({ email, password }: LoginParams) => {
   const findUser = await userModel.findOne({ email });
   if (!findUser) {
@@ -42,7 +43,7 @@ export const login = async ({ email, password }: LoginParams) => {
     return {
       data: generateJWT({
         email,
-        firsttName: findUser.firstName,
+        firstName: findUser.firstName,
         lastName: findUser.lastName,
       }),
       statusCode: 200,
