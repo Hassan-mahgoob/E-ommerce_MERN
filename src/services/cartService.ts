@@ -48,7 +48,7 @@ export const addItemToCart = async ({
   if (!product) {
     return { data: "Product not found!", statusCode: 400 };
   }
-  if(product.stock < quantity){
+  if (product.stock < quantity) {
     return { data: "Not enough stock!", statusCode: 400 };
   }
   cart.items.push({
@@ -58,6 +58,51 @@ export const addItemToCart = async ({
   });
   // Update the totalAmount for the cart
   cart.totalAmount += product.price * quantity;
+  const updatedCart = await cart.save();
+  return { data: updatedCart, statusCode: 200 };
+};
+
+interface UpdateItemInCart {
+  userId: string;
+  productId: any;
+  quantity: number;
+}
+
+export const updateItemInCart = async ({
+  userId,
+  productId,
+  quantity,
+}: UpdateItemInCart) => {
+  const cart = await getActiveCartForUser({ userId });
+  const existsInCart = cart.items.find(
+    (p) => p.product.toString() === productId
+  );
+
+  if (!existsInCart) {
+    return { data: "Item not found in cart!", statusCode: 400 };
+  }
+
+  const product = await productModel.findById(productId);
+
+  if (!product) {
+    return { data: "Product not found!", statusCode: 400 };
+  }
+
+  if (product.stock < quantity) {
+    return { data: "Not enough stock!", statusCode: 400 };
+  }
+
+  existsInCart.quantity = quantity;
+  const otherCartItems = cart.items.filter(
+    (p) => p.product.toString() !== productId
+  );
+
+  let total = otherCartItems.reduce(
+    (sum, product) => sum + product.unitPrice * product.quantity,
+    0
+  );
+  total += existsInCart.unitPrice * existsInCart.quantity;
+  cart.totalAmount = total;
   const updatedCart = await cart.save();
   return { data: updatedCart, statusCode: 200 };
 };
