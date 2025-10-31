@@ -16,29 +16,25 @@ const validataJWT = (req: ExtendRequest, res: Response, next: NextFunction) => {
     res.status(403).json("Bearer token is required");
     return;
   }
-  Jwt.verify(
-    token,
-    "jwY19MyEAix1SC3Oi8vPjIz7ebxAB0VG",
-    async (err, payload) => {
-      if (err) {
-        res.status(403).send("Invalid token");
-        return;
-      }
-      if (!payload) {
-        res.status(403).send("Invalid token");
-        return;
-      }
-      const userPayload = payload as {
-        email: string;
-        firstName: string;
-        lastName: string;
-      };
-      // Fetch user database based on the payload
-      const user = await userModel.findOne({ email: userPayload.email });
-      req.user = user;
-      next();
+  Jwt.verify(token, process.env.JWT_SECRET || "", async (err, payload) => {
+    if (err) {
+      res.status(403).send("Invalid token");
+      return;
     }
-  );
+    if (!payload) {
+      res.status(403).send("Invalid token");
+      return;
+    }
+    const userPayload = payload as {
+      email: string;
+      firstName: string;
+      lastName: string;
+    };
+    // Fetch user database based on the payload
+    const user = await userModel.findOne({ email: userPayload.email });
+    req.user = user;
+    next();
+  });
 };
 
 export default validataJWT;

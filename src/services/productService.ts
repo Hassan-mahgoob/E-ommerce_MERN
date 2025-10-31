@@ -5,7 +5,8 @@ export const getAllProducts = async () => {
 };
 
 export const seedInitialProducts = async () => {
-  const products = [
+  try {
+     const products = [
     {
       title: "Laptop Hp ",
       image:
@@ -18,4 +19,8 @@ export const seedInitialProducts = async () => {
   if (existingProducts.length === 0) {
     await productModel.insertMany(products);
   }
+  } catch (error) {
+    console.error("can't seed products", error);
+  }
+ 
 };
