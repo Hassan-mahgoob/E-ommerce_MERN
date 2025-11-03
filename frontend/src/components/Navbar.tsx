@@ -10,13 +10,16 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { useAuth } from "../context/Auth/AuthContext";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Navbar() {
+  const { username, token } = useAuth();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+  console.log("username", username, "token", token);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -30,16 +33,22 @@ function Navbar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: "100%",
                 alignItems: "center",
+                flexDirection: "row",
               }}
-              >
-              <Box sx={{ display: "flex", alignItems: "center", flexDirection: "row" }}>
+            >
               <AdbIcon sx={{ display: "flex", mr: 1 }} />
               <Typography
                 variant="h6"
