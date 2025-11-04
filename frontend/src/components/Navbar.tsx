@@ -10,9 +10,10 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useAuth } from "../context/Auth/AuthContext";
 import Grid from "@mui/material/Grid";
-import { Button } from "@mui/material";
+import { Badge, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 function Navbar() {
@@ -74,7 +75,18 @@ function Navbar() {
                 Black shop
               </Typography>
             </Box>
-            <Box sx={{ flexGrow: 0 }}>
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              gap={2}
+              justifyContent="center"
+            >
+              <IconButton aria-label="cart" onClick={() => navigate("/cart")}>
+                <Badge badgeContent={4} color="secondary">
+                  <ShoppingCartIcon sx={{ color: "white" }} />
+                </Badge>
+              </IconButton>
               {isAuthenticated ? (
                 <>
                   <Tooltip title="Open settings">
@@ -85,10 +97,10 @@ function Navbar() {
                       spacing={2}
                       // gap={2}
                     >
-                      <Grid item>
+                      <Grid>
                         <Typography>{username}</Typography>
                       </Grid>
-                      <Grid item>
+                      <Grid>
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                           <Avatar
                             alt={username || ""}
