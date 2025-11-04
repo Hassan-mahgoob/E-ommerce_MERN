@@ -30,7 +30,7 @@ const HomePage = () => {
     <Container sx={{ mt: 2 }}>
       <Grid container spacing={2}>
         {products.map((p) => (
-          <Grid item size={4}>
+          <Grid key={p._id} size={4}>
             <ProductCard {...p} />
           </Grid>
         ))}
