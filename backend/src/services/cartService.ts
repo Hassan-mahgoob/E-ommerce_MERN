@@ -6,7 +6,6 @@ interface CreateCartForUser {
   userId: string;
 }
 const createCartForUser = async ({ userId }: CreateCartForUser) => {
-  
   const cart = await cartModel.create({ userId, totalAmount: 0 });
   await cart.save();
   return cart;
@@ -14,11 +13,20 @@ const createCartForUser = async ({ userId }: CreateCartForUser) => {
 
 interface GetActiveCartForUser {
   userId: string;
+  PopulateProduct?: boolean;
 }
 export const getActiveCartForUser = async ({
   userId,
+  PopulateProduct,
 }: GetActiveCartForUser) => {
-  let cart = await cartModel.findOne({ userId, status: "active" });
+  let cart;
+  if (PopulateProduct) {
+    cart = await cartModel
+      .findOne({ userId, status: "active" })
+      .populate("items.product");
+  }else{
+    cart = await cartModel.findOne({ userId, status: "active" });
+  }
   if (!cart) {
     cart = await createCartForUser({ userId });
   }
@@ -113,8 +121,8 @@ export const updateItemInCart = async ({
   let total = calcuateCartTotalItems({ cartItems: otherCartItems });
   total += existsInCart.unitPrice * existsInCart.quantity;
   cart.totalAmount = total;
-  const updatedCart = await cart.save();
-  return { data: updatedCart, statusCode: 200 };
+  await cart.save();
+  return { data: getActiveCartForUser({ userId , PopulateProduct: true }), statusCode: 200 };
 };
 
 interface DeleteItemFromCart {
@@ -140,8 +148,8 @@ export const deleteItemFromCart = async ({
   const total = calcuateCartTotalItems({ cartItems: otherCartItems });
   cart.items = otherCartItems;
   cart.totalAmount = total;
-  const updatedCart = await cart.save();
-  return { data: updatedCart, statusCode: 200 };
+  await cart.save();
+  return { data: getActiveCartForUser({ userId , PopulateProduct: true }), statusCode: 200 };
 };
 
 const calcuateCartTotalItems = ({ cartItems }: { cartItems: ICartItem[] }) => {
