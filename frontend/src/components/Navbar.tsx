@@ -15,10 +15,11 @@ import { useAuth } from "../context/Auth/AuthContext";
 import Grid from "@mui/material/Grid";
 import { Badge, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import { useCart } from "../context/Cart/CartContext";
 function Navbar() {
   const navigate = useNavigate();
   const { username, isAuthenticated, logout } = useAuth();
+  const { cartItems } = useCart();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -48,33 +49,38 @@ function Navbar() {
               alignItems: "center",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "row",
-              }}
+            <Button
+              variant="text"
+              sx={{ color: "white" }}
+              onClick={() => navigate("/")}
             >
-              <AdbIcon sx={{ display: "flex", mr: 1 }} />
-              <Typography
-                variant="h6"
-                noWrap
-                component="a"
-                onClick={() => navigate("/")}
+              <Box
                 sx={{
-                  mr: 2,
-                  cursor: "pointer",
-
-                  display: { xs: "none", md: "flex" },
-                  fontFamily: "monospace",
-                  fontWeight: 700,
-                  color: "black",
-                  textDecoration: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
                 }}
               >
-                Black shop
-              </Typography>
-            </Box>
+                <AdbIcon sx={{ display: "flex", mr: 1 }} />
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="a"
+                  sx={{
+                    mr: 2,
+                    cursor: "pointer",
+
+                    display: { xs: "none", md: "flex" },
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                    color: "black",
+                    textDecoration: "none",
+                  }}
+                >
+                  Black shop
+                </Typography>
+              </Box>
+            </Button>
             <Box
               display="flex"
               flexDirection="row"
@@ -83,7 +89,7 @@ function Navbar() {
               justifyContent="center"
             >
               <IconButton aria-label="cart" onClick={() => navigate("/cart")}>
-                <Badge badgeContent={4} color="secondary">
+                <Badge badgeContent={cartItems.length} color="secondary">
                   <ShoppingCartIcon sx={{ color: "white" }} />
                 </Badge>
               </IconButton>

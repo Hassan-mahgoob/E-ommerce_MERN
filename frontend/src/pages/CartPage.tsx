@@ -3,24 +3,6 @@ import { useCart } from "../context/Cart/CartContext";
 const CartPage = () => {
   const { cartItems, totalAmount } = useCart();
 
-    // useEffect(() => {
-    //   if (!token) {
-    //     return;
-    //   }
-    //   const fetchCart = async () => {
-    //     const response = await fetch(`${BASE_URL}/cart`, {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     });
-    //     if (!response.ok) {
-    //       setError("Failed to fetch cart");
-    //     }
-    //     const data = await response.json();
-    //     setCart(data);
-    //   };
-    //   fetchCart();
-    // }, [token]);
   return (
     <Container sx={{ mt: 2 }}>
       <Typography variant="h4">My Cart</Typography>
